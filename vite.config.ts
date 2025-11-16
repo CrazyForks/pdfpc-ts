@@ -33,8 +33,8 @@ export default defineConfig({
   },
   build: {
     // sourcemap: true,
-    // minify: "oxc",
-    // cssMinify: "lightningcss",
+    minify: "oxc",
+    cssMinify: "lightningcss",
     target: "esnext",
     assetsInlineLimit: 0,
     reportCompressedSize: false,
@@ -44,5 +44,8 @@ export default defineConfig({
   },
   worker: {
     format: "es",
+  },
+  experimental: {
+    enableNativePlugin: true,
   },
 });
