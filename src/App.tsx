@@ -40,7 +40,10 @@ function PopupRoot() {
 
 const handleFileSelect =
   (type: "no-notes" | "notes-right") => async (selectedFile: File) => {
-    const u = await selectedFile.bytes();
+    const u =
+      "bytes" in Blob.prototype
+        ? await selectedFile.bytes()
+        : await selectedFile.arrayBuffer().then((buf) => new Uint8Array(buf));
 
     try {
       await worker.loadPDF(transfer(u, [u.buffer]));
