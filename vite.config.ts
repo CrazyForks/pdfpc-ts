@@ -24,6 +24,8 @@ export default defineConfig({
     headers: {
       "Cross-Origin-Embedder-Policy": "require-corp",
       "Cross-Origin-Opener-Policy": "same-origin",
+      "Content-Security-Policy":
+        "default-src 'self'; script-src 'self' 'unsafe-eval'; img-src 'self' data: blob:;",
     },
   },
   optimizeDeps: {
