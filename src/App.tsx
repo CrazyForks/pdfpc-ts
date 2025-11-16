@@ -3,6 +3,7 @@ import { createEffect, createSignal, For, Show } from "solid-js";
 import { render } from "solid-js/web";
 import { DropZone } from "./DropZone.tsx";
 import type { obj } from "./pdfium-worker.ts";
+import _styles from "./main.css?inline";
 
 const _worker = new Worker(new URL("./pdfium-worker.ts", import.meta.url), {
   type: "module",
@@ -32,8 +33,16 @@ export function setDocImagesWrapper(index: number, url: string) {
 
 function PopupRoot() {
   return (
-    <div>
-      <p>{globalCount()}</p>
+    <div class="aspect-video">
+      <div class="relative w-full h-full overflow-hidden aspect-video">
+        <Show when={docImages()[globalCount()]}>
+          <img
+            src={docImages()[globalCount()]}
+            alt="slide"
+            class="absolute h-full w-auto"
+          />
+        </Show>
+      </div>
     </div>
   );
 }
@@ -64,67 +73,125 @@ function App() {
   createEffect(() => {});
 
   return (
-    <Show
-      when={filePageCount() <= 0}
-      fallback={
-        // <img src={imgTest()} />
-        <div class="grid grid-cols-3 gap-4 p-4">
-          <For each={Array(filePageCount()).fill(0)}>
-            {(_, index) => (
-              <div class="aspect-video outline outline-cat-subtext0">
-                <Show when={docImages()[index()]}>
-                  <img
-                    src={docImages()[index()]}
-                    class="w-full h-full object-contain"
-                  />
-                </Show>
-              </div>
-            )}
-          </For>
-        </div>
-      }
-    >
+    <>
       <header></header>
       <main class="mx-10 my-10">
-        <h1 class="text-4xl font-extrabold">PDF Presenter View</h1>
-        {/* 1 - Select your PDF file: */}
+        <Show
+          when={filePageCount() <= 0}
+          fallback={
+            <>
+              <div class="grid grid-cols-3 gap-4 p-4">
+                <For each={Array(filePageCount()).fill(0)}>
+                  {(_, index) => (
+                    <div class="aspect-video outline outline-cat-subtext0">
+                      <Show when={docImages()[index()]}>
+                        <img
+                          src={docImages()[index()]}
+                          class="w-full h-full object-contain"
+                        />
+                      </Show>
+                    </div>
+                  )}
+                </For>
+              </div>
+              {/* Control buttons */}
+              <div class="flex justify-between p-4 absolute bottom-4 left-4 gap-6 ">
+                <div
+                  class="h-8 w-8 place-items-center grid outline outline-cat-subtext0 text-cat-subtext0 rounded-full opacity-25 hover:opacity-100 cursor-pointer"
+                  onClick={() => {
+                    if (filePageCount() <= 0) return;
+                    setGlobalCount((prev) => Math.max(0, prev - 1));
+                    console.log("Current page:", globalCount());
+                  }}
+                >
+                  <button
+                    class="icon-[fluent--arrow-left-24-regular] cursor-pointer"
+                    title="Previous page"
+                  />
+                </div>
+                <div
+                  class="h-8 w-8 place-items-center grid outline outline-cat-subtext0 text-cat-subtext0 rounded-full opacity-25 hover:opacity-100 cursor-pointer"
+                  onClick={() => {
+                    if (filePageCount() <= 0) return;
+                    setGlobalCount((prev) =>
+                      Math.min(prev + 1, filePageCount() - 1),
+                    );
+                    console.log("Current page:", globalCount());
+                  }}
+                >
+                  <button
+                    class="icon-[fluent--arrow-right-24-regular] cursor-pointer"
+                    title="Next page"
+                  />
+                </div>
+                <div
+                  class="h-8 w-8 place-items-center grid outline outline-cat-subtext0 text-cat-subtext0 rounded-full opacity-25 hover:opacity-100 cursor-pointer"
+                  onClick={() => {}}
+                >
+                  <button
+                    class="icon-[fluent--grid-24-filled] cursor-pointer"
+                    title="Slide grid"
+                  />
+                </div>
+                <div
+                  class="h-8 w-8 place-items-center grid outline outline-cat-subtext0 text-cat-subtext0 rounded-full opacity-25 hover:opacity-100 cursor-pointer"
+                  onClick={() => {
+                    if (!w) {
+                      w = window.open(
+                        "",
+                        "",
+                        "left=100,top=100,width=320,height=180",
+                      );
+                      console.log(w);
 
-        <div class="mt-30 grid grid-cols-2 h-80 w-full px-30 gap-16">
-          <DropZone
-            type="no-notes"
-            onFileSelect={handleFileSelect("no-notes")}
-          />
-          <DropZone
-            type="notes-right"
-            onFileSelect={handleFileSelect("notes-right")}
-          />
-        </div>
-      </main>
-      <button
-        onclick={(e) => {
-          console.log(e);
-          if (!w) {
-            w = window.open("", "", "left=100,top=100,width=320,height=320");
-            console.log(w);
-
-            // todo: when does vite support css import attributes?
-            // w?.document.adoptedStyleSheets?.push(styles);
-            render(() => <PopupRoot />, w!.document!.querySelector("body")!);
-
-            // const n = w!.document.createElement("a");
-            // n.innerText = "fuck";
-            // w?.document.querySelector("body")?.appendChild(n);
-            // w!.window.console.log(g[0]);
+                      // todo: when does vite support css import attributes?
+                      const styles = new w.CSSStyleSheet();
+                      styles.replaceSync(_styles);
+                      w?.document.adoptedStyleSheets?.push(styles);
+                      render(
+                        () => <PopupRoot />,
+                        w!.document!.querySelector("body")!,
+                      );
+                    }
+                  }}
+                >
+                  <button
+                    class="icon-[fluent--open-24-filled] cursor-pointer"
+                    title="Show slide"
+                  />
+                </div>
+                <div
+                  class="h-8 w-8 place-items-center grid outline outline-cat-subtext0 text-cat-subtext0 rounded-full opacity-25 hover:opacity-100 cursor-pointer"
+                  onClick={() => {
+                    w?.close();
+                    w = null;
+                  }}
+                >
+                  <button
+                    class="icon-[fluent--share-screen-stop-24-filled] cursor-pointer"
+                    title="Close slide"
+                  />
+                </div>
+              </div>
+              {/* ends */}
+            </>
           }
-        }}
-      />
-      <button
-        onclick={() => {
-          setGlobalCount((v) => v + 1);
-        }}
-      />
+        >
+          <h1 class="text-4xl font-extrabold">PDF Presenter View</h1>
+          <div class="mt-30 grid grid-cols-2 h-80 w-full px-30 gap-16">
+            <DropZone
+              type="no-notes"
+              onFileSelect={handleFileSelect("no-notes")}
+            />
+            <DropZone
+              type="notes-right"
+              onFileSelect={handleFileSelect("notes-right")}
+            />
+          </div>
+        </Show>
+      </main>
       <footer></footer>
-    </Show>
+    </>
   );
 }
 

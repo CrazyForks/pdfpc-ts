@@ -6,6 +6,9 @@
   /* @apply scroll-smooth; */
   color-scheme: light dark;
   text-autospace: normal;
+
+  /* Only affacts the popup window */
+  @apply bg-black;
 }
 
 @theme {
@@ -19,4 +22,3 @@
 
   @apply font-serif;
 }
-
