@@ -48,6 +48,8 @@ This project is good enough for my own use; I don't want to create a second Powe
 
 ![](https://assets.hash.moe/pdfpc-ts-demo.mp4)
 
+https://assets.hash.moe/pdfpc-ts-demo.mp4
+
 ## Motivation
 
 * Browsers have supported [multiple windows](https://developer.mozilla.org/en-US/docs/Web/API/Window/open) from the beginning.
