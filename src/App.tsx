@@ -378,7 +378,7 @@ function SelectFile() {
       <div>
         <p>Example:</p>
         <ul>
-          <li class="ml-4 list-disc">
+          <li class="ml-4 list-disc underline">
             <a
               href="/?file=example.pdf"
               onclick={(e) => {
