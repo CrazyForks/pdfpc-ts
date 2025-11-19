@@ -1,10 +1,10 @@
-import { proxy, transfer, wrap } from "comlink";
-import { createEffect, createSignal, For, Show } from "solid-js";
-import { render } from "solid-js/web";
 import { clsx } from "clsx";
+import { proxy, transfer, wrap } from "comlink";
+import { createSignal, For, onCleanup, onMount, Show } from "solid-js";
+import { render } from "solid-js/web";
 import { DropZone } from "./DropZone.tsx";
-import type { obj } from "./pdfium-worker.ts";
 import _styles from "./main.css?inline";
+import type { obj } from "./pdfium-worker.ts";
 
 const _worker = new Worker(new URL("./pdfium-worker.ts", import.meta.url), {
   type: "module",
@@ -77,13 +77,59 @@ function App() {
   // let w: WindowProxy | null = null;
   const [w, setW] = createSignal<WindowProxy | null>(null);
 
-  createEffect(() => {});
+  onMount(() => {
+    const handler = (e: KeyboardEvent) => {
+      console.log("global key:", e.key);
+      switch (e.key) {
+        case "ArrowRight":
+        case " ":
+          nextPage();
+          break;
+        case "ArrowLeft":
+          previousPage();
+          break;
+        case "Escape":
+          if (w()) {
+            closePopup();
+          }
+          break;
+        default:
+          break;
+      }
+    };
+    window.addEventListener("keydown", handler);
+    onCleanup(() => window.removeEventListener("keydown", handler));
+  });
 
   const nextPage = () => {
     if (filePageCount() <= 0) return;
     setGlobalCount((prev) => Math.min(prev + 1, filePageCount() - 1));
     console.log("Current page:", globalCount());
   };
+
+  const previousPage = () => {
+    if (filePageCount() <= 0) return;
+    setGlobalCount((prev) => Math.max(0, prev - 1));
+    console.log("Current page:", globalCount());
+  };
+
+  function popup() {
+    const _w = window.open("", "", "left=100,top=100,width=320,height=180");
+    setW(_w);
+    console.log(w());
+
+    // todo: when does vite support css import attributes?
+    // @ts-expect-error 误报
+    const styles = new (w().CSSStyleSheet)();
+    styles.replaceSync(_styles);
+    w()?.document.adoptedStyleSheets?.push(styles);
+    render(() => <PopupRoot />, w()!.document!.querySelector("body")!);
+  }
+
+  function closePopup() {
+    w()?.close();
+    setW(null);
+  }
 
   return (
     <>
@@ -162,11 +208,7 @@ function App() {
           {/* Control buttons */}
           <div class="pointer-events-none fixed bottom-4 left-4 flex justify-between gap-6 p-4">
             <CircleButton
-              onClick={() => {
-                if (filePageCount() <= 0) return;
-                setGlobalCount((prev) => Math.max(0, prev - 1));
-                console.log("Current page:", globalCount());
-              }}
+              onClick={previousPage}
               classIcon="icon-[fluent--arrow-left-24-regular]"
               title="Previous page"
             />
@@ -221,26 +263,9 @@ function App() {
             <CircleButton
               onClick={() => {
                 if (!w()) {
-                  const _w = window.open(
-                    "",
-                    "",
-                    "left=100,top=100,width=320,height=180",
-                  );
-                  setW(_w);
-                  console.log(w());
-
-                  // todo: when does vite support css import attributes?
-                  // @ts-expect-error 误报
-                  const styles = new (w().CSSStyleSheet)();
-                  styles.replaceSync(_styles);
-                  w()?.document.adoptedStyleSheets?.push(styles);
-                  render(
-                    () => <PopupRoot />,
-                    w()!.document!.querySelector("body")!,
-                  );
+                  popup();
                 } else {
-                  w()?.close();
-                  setW(null);
+                  closePopup();
                 }
               }}
               // iconClass="icon-[fluent--window-new-24-filled]"
