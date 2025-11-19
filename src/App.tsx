@@ -55,6 +55,7 @@ function PopupRoot() {
 
 const handleFileSelect =
   (type: "no-notes" | "notes-right") => async (selectedFile: File) => {
+    console.log("Selected file:", selectedFile);
     const u =
       "bytes" in Blob.prototype
         ? await selectedFile.bytes()
@@ -73,9 +74,38 @@ const handleFileSelect =
     }
   };
 
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 function App() {
   // let w: WindowProxy | null = null;
   const [w, setW] = createSignal<WindowProxy | null>(null);
+
+  // const params = new URLSearchParams(window.location.search);
+  // const fileUrl = params.get("file");
+  // console.log(params, fileUrl);
+  // if (fileUrl) {
+  //   const f = createResource(async () => {
+  //     const res = await fetch(fileUrl);
+  //     if (!res.ok) {
+  //       throw new Error(`Failed to fetch file: ${res.statusText}`);
+  //     }
+  //     const blob = await res.blob();
+  //     const fileName = fileUrl.split("/").pop() || "downloaded.pdf";
+  //     const file = new File([blob], fileName, { type: blob.type });
+  //     console.log(res);
+  //     return file;
+  //   });
+  //   console.log(f);
+  // }
+
+  onMount(async () => {
+    // I don't know why but ...
+    await sleep(1500);
+    // if url has ?file=..., load that file
+    await fetchPDF();
+  });
 
   onMount(() => {
     const handler = (e: KeyboardEvent) => {
@@ -283,6 +313,28 @@ function App() {
   );
 }
 
+async function fetchPDF(url?: string) {
+  console.log(url);
+  const params = url
+    ? new URLSearchParams(new URL(url, window.location).search)
+    : new URLSearchParams(window.location.search);
+  const fileUrl = params.get("file");
+  console.log(params, fileUrl);
+  if (fileUrl) {
+    // fetch
+    // and convert to File
+    const res = await fetch(fileUrl);
+    if (!res.ok) {
+      throw new Error(`Failed to fetch file: ${res.statusText}`);
+    }
+    const blob = await res.blob();
+    const fileName = fileUrl.split("/").pop() || "downloaded.pdf";
+    const file = new File([blob], fileName, { type: blob.type });
+    console.log(res);
+    handleFileSelect("no-notes")(file);
+  }
+}
+
 function CircleButton(props: {
   onClick: () => void;
   classIcon: string;
@@ -322,6 +374,22 @@ function SelectFile() {
           type="notes-right"
           onFileSelect={handleFileSelect("notes-right")}
         />
+      </div>
+      <div>
+        <p>Example:</p>
+        <ul>
+          <li class="ml-4 list-disc">
+            <a
+              href="/?file=example.pdf"
+              onclick={(e) => {
+                e.preventDefault();
+                fetchPDF("/?file=example.pdf");
+              }}
+            >
+              Touying Metropolis demo
+            </a>
+          </li>
+        </ul>
       </div>
     </>
   );
