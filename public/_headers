@@ -1,2 +1,5 @@
 /*
   Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-eval'; img-src 'self' data: blob:;
+
+/*.pdf
+  Cache-Control: public, max-age=31536000, immutable
