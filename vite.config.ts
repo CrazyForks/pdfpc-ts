@@ -29,7 +29,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ["wasm-vips"],
+    exclude: ["wasm-vips", "react/jsx-dev-runtime"],
   },
   build: {
     // sourcemap: true,

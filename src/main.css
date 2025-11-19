@@ -9,13 +9,14 @@
 
   /* Only affacts the popup window */
   &:not(:has(#root)) {
-    @apply grid place-items-center min-h-screen bg-black;
+    @apply grid min-h-screen place-items-center bg-black;
   }
 }
 
 @theme {
-  --font-zh: "Noto Sans SC", "SEC CJK SC", "PingFang SC", ui-sans-serif,
-    system-ui, sans-serif, emoji;
+  --font-zh:
+    "Noto Sans SC", "SEC CJK SC", "PingFang SC", ui-sans-serif, system-ui,
+    sans-serif, emoji;
 }
 
 #root {
