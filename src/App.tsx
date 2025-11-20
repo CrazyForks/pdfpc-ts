@@ -24,6 +24,8 @@ const [filePageCount, setFilePageCount] = createSignal(-1);
 
 const [docImages, setDocImages] = createSignal<Array<string | undefined>>([]);
 
+const [w, setW] = createSignal<WindowProxy | null>(null);
+
 const OVERVIEW = 0,
   PRESENTER = 1;
 
@@ -37,7 +39,31 @@ export function setDocImagesWrapper(index: number, url: string) {
   });
 }
 
+const handler = (e: KeyboardEvent) => {
+  console.log("global key:", e.key);
+  switch (e.key) {
+    case "ArrowRight":
+    case " ":
+      nextPage();
+      break;
+    case "ArrowLeft":
+      previousPage();
+      break;
+    case "Escape":
+      if (w()) {
+        closePopup();
+      }
+      break;
+    default:
+      break;
+  }
+};
+
 function PopupRoot() {
+  onMount(() => {
+    w()?.window.addEventListener("keydown", handler);
+    onCleanup(() => w()?.window.removeEventListener("keydown", handler));
+  });
   return (
     <div class="aspect-video">
       <div class="h-[min(100vh,calc(100vw*9/16))] w-[min(100vw,calc(100vh*16/9))] overflow-hidden">
@@ -78,10 +104,37 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function App() {
-  // let w: WindowProxy | null = null;
-  const [w, setW] = createSignal<WindowProxy | null>(null);
+const nextPage = () => {
+  if (filePageCount() <= 0) return;
+  setGlobalCount((prev) => Math.min(prev + 1, filePageCount() - 1));
+  console.log("Current page:", globalCount());
+};
 
+const previousPage = () => {
+  if (filePageCount() <= 0) return;
+  setGlobalCount((prev) => Math.max(0, prev - 1));
+  console.log("Current page:", globalCount());
+};
+
+function popup() {
+  const _w = window.open("", "", "left=100,top=100,width=320,height=180");
+  setW(_w);
+  console.log(w());
+
+  // todo: when does vite support css import attributes?
+  // @ts-expect-error 误报
+  const styles = new (w().CSSStyleSheet)();
+  styles.replaceSync(_styles);
+  w()?.document.adoptedStyleSheets?.push(styles);
+  render(() => <PopupRoot />, w()!.document!.querySelector("body")!);
+}
+
+function closePopup() {
+  w()?.close();
+  setW(null);
+}
+
+function App() {
   // const params = new URLSearchParams(window.location.search);
   // const fileUrl = params.get("file");
   // console.log(params, fileUrl);
@@ -108,58 +161,9 @@ function App() {
   });
 
   onMount(() => {
-    const handler = (e: KeyboardEvent) => {
-      console.log("global key:", e.key);
-      switch (e.key) {
-        case "ArrowRight":
-        case " ":
-          nextPage();
-          break;
-        case "ArrowLeft":
-          previousPage();
-          break;
-        case "Escape":
-          if (w()) {
-            closePopup();
-          }
-          break;
-        default:
-          break;
-      }
-    };
     window.addEventListener("keydown", handler);
     onCleanup(() => window.removeEventListener("keydown", handler));
   });
-
-  const nextPage = () => {
-    if (filePageCount() <= 0) return;
-    setGlobalCount((prev) => Math.min(prev + 1, filePageCount() - 1));
-    console.log("Current page:", globalCount());
-  };
-
-  const previousPage = () => {
-    if (filePageCount() <= 0) return;
-    setGlobalCount((prev) => Math.max(0, prev - 1));
-    console.log("Current page:", globalCount());
-  };
-
-  function popup() {
-    const _w = window.open("", "", "left=100,top=100,width=320,height=180");
-    setW(_w);
-    console.log(w());
-
-    // todo: when does vite support css import attributes?
-    // @ts-expect-error 误报
-    const styles = new (w().CSSStyleSheet)();
-    styles.replaceSync(_styles);
-    w()?.document.adoptedStyleSheets?.push(styles);
-    render(() => <PopupRoot />, w()!.document!.querySelector("body")!);
-  }
-
-  function closePopup() {
-    w()?.close();
-    setW(null);
-  }
 
   return (
     <>
