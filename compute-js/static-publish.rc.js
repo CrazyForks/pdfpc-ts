@@ -4,7 +4,7 @@
 
 /** @type {import('@fastly/compute-js-static-publish').StaticPublishRc} */
 const rc = {
-  kvStoreName: "site-content",
+  kvStoreName: "site",
   publishId: "default",
   defaultCollectionName: "live",
   staticPublisherWorkingDir: "./static-publisher",
