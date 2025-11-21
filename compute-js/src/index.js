@@ -12,6 +12,11 @@ async function handleRequest(event) {
   const request = event.request;
 
   const response = await publisherServer.serveRequest(request);
+  response?.headers.append(
+    "Strict-Transport-Security",
+    "max-age=63072000; includeSubDomains; preload",
+  );
+  response?.headers.append("Alt-Svc", 'h3=":443"; ma=2592000');
   response?.headers.append("Cross-Origin-Embedder-Policy", "require-corp");
   response?.headers.append("Cross-Origin-Opener-Policy", "same-origin");
   response?.headers.append(
