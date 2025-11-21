@@ -1,0 +1,51 @@
+name: Build
+
+on:
+  # workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Fastly CLI
+        uses: fastly/compute-actions/setup@v12
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 10
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install && pnpm --prefix ./compute-js install
+
+      - run: pnpm run build
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - run: |
+          pnpm run fastly:deploy
+          pnpm run fastly:publish
+        working-directory: compute-js
+        env:
+          FASTLY_API_TOKEN: ${{ secrets.FASTLY_API_TOKEN }}

@@ -1,0 +1,17 @@
+# This file describes a Fastly Compute package. To learn more visit:
+# https://developer.fastly.com/reference/fastly-toml/
+
+service_id = "RdgLvQVVwR7I7w4jYwImlr"
+authors = []
+description = ""
+language = "javascript"
+manifest_version = 3
+name = "pdfpc-ts"
+
+[scripts]
+build = "pnpm run build"
+
+[local_server.kv_stores]
+site-content = { file = "./static-publisher/kvstore.json", format = "json" }
+
+[setup.kv_stores.site-content]
