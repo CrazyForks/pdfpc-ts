@@ -24,13 +24,15 @@ During presentation, you can also switch between overview and presentation modes
 
 Supported keyboard shortcuts:
 
-* ←→ to navigate pages
+* ←→ - Navigate pages
+* Escape - End of Show
 
-Theoretically supports fetching PDFs from the network. The PDF should be marked with Cross-Origin-Resource-Policy to allow requests. Currently, only example files from the same domain can be loaded because I was too lazy to modify the CSP.
+
+PDFs can be retrieved from the network. The PDF should have its CORS request headers correctly set to indicate that the request is allowed.
 
 ## Limitations
 
-This project is good enough for my own use; I don't want to create a second PowerPoint.
+This project is good enough for my own use; I don't want to create a second PowerPoint. If you like Typst's layout but don't want to give up PowerPoint's rich features, I suggest printing each page of the PDF to PowerPoint as a background.
 
 * Mobile UI is not optimized
 * PDF format options are not as flexible as pdfpc
@@ -45,8 +47,6 @@ This project is good enough for my own use; I don't want to create a second Powe
 * wasm-vips consumes too much memory
 
 ## Demo
-
-![](https://assets.hash.moe/pdfpc-ts-demo.mp4)
 
 https://assets.hash.moe/pdfpc-ts-demo.mp4
 

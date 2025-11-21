@@ -25,7 +25,7 @@
 * ←→翻页，空格下一页
 * Escape 结束放映
 
-理论上支持从网络获取 PDF。PDF 应该用 Cross-Origin-Resource-Policy 标记允许被请求。目前只能加载相同域名下的示例，因为我懒得改 CSP。
+支持从网络获取 PDF。PDF 应该正确设置 CORS 系列请求头，以标记允许被请求。
 
 ## 限制
 
@@ -45,7 +45,7 @@
 
 ## 演示
 
-TODO
+https://assets.hash.moe/pdfpc-ts-demo.mp4
 
 ## 创作动机
 
