@@ -13,9 +13,9 @@ const config = {
   // includeWellKnown: true,
   // kvStoreAssetInclusionTest: (assetKey) => true,
   // contentCompression: [ 'br', 'gzip' ],
-  // contentTypes: [
-  //   { test: /.custom$/, contentType: 'application/x-custom', text: false },
-  // ],
+  contentTypes: [
+    { test: /.wasm$/, contentType: "application/wasm", text: false },
+  ],
 
   // Server settings are saved to the KV Store per collection
   server: {
