@@ -12,6 +12,6 @@ name = "pdfpc-ts"
 build = "pnpm run build"
 
 [local_server.kv_stores]
-site-content = { file = "./static-publisher/kvstore.json", format = "json" }
+site = { file = "./static-publisher/kvstore.json", format = "json" }
 
-[setup.kv_stores.site-content]
+[setup.kv_stores.site]
