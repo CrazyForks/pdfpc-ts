@@ -5,11 +5,10 @@
   "author": "you@example.com",
   "type": "module",
   "devDependencies": {
-    "@fastly/cli": "^11.2.0",
     "@fastly/compute-js-static-publish": "^7.0.3"
   },
   "dependencies": {
-    "@fastly/js-compute": "^3.26.0"
+    "@fastly/js-compute": "^3.36.0"
   },
   "engines": {
     "node": ">=20.11.0"

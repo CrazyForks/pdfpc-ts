@@ -26,3 +26,8 @@ dist-ssr
 
 # Hash
 src/vendor/
+
+# Emacs
+~*
+\#*\#
+

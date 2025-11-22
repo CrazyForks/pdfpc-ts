@@ -9,12 +9,9 @@ importers:
   .:
     dependencies:
       '@fastly/js-compute':
-        specifier: ^3.26.0
+        specifier: ^3.36.0
         version: 3.36.0
     devDependencies:
-      '@fastly/cli':
-        specifier: ^11.2.0
-        version: 11.5.0
       '@fastly/compute-js-static-publish':
         specifier: ^7.0.3
         version: 7.0.3(@fastly/js-compute@3.36.0)
