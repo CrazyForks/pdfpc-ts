@@ -35,9 +35,6 @@ importers:
       tailwindcss:
         specifier: ^4.1.17
         version: 4.1.17
-      wasm-vips:
-        specifier: ^0.0.16
-        version: 0.0.16
     devDependencies:
       '@iconify/tailwind':
         specifier: ^1.2.0
@@ -1542,10 +1539,6 @@ packages:
       vite:
         optional: true
 
-  wasm-vips@0.0.16:
-    resolution: {integrity: sha512-4/bEq8noAFt7DX3VT+Vt5AgNtnnOLwvmrDbduWfiv9AV+VYkbUU4f9Dam9e6khRqPinyClFHCqiwATTTJEiGwA==}
-    engines: {node: '>=16.4.0'}
-
   workerd@1.20251125.0:
     resolution: {integrity: sha512-oQYfgu3UZ15HlMcEyilKD1RdielRnKSG5MA0xoi1theVs99Rop9AEFYicYCyK1R4YjYblLRYEiL1tMgEFqpReA==}
     engines: {node: '>=16'}
@@ -2782,8 +2775,6 @@ snapshots:
   vitefu@1.1.1(rolldown-vite@7.2.8(@types/node@24.10.1)(esbuild@0.25.12)(jiti@2.6.1)(terser@5.44.1)):
     optionalDependencies:
       vite: rolldown-vite@7.2.8(@types/node@24.10.1)(esbuild@0.25.12)(jiti@2.6.1)(terser@5.44.1)
-
-  wasm-vips@0.0.16: {}
 
   workerd@1.20251125.0:
     optionalDependencies:

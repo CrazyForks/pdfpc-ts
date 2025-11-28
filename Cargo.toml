@@ -1,0 +1,30 @@
+[package]
+name = "bitmap-to-png"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+image = { version = "0.25.9", default-features = false, features = [
+  "bmp",
+  "png"
+], optional = true }
+js-sys = "0.3.83"
+wasm-bindgen = "0.2.106"
+zune-png = { version = "0.4.10", default-features = false, features = [
+  "portable-simd",
+  "std"
+], optional = true }
+
+[features]
+default = ["image"]
+
+[profile.release]
+opt-level = 3
+debug = false
+strip = true
+lto = true
+panic = "abort"
+codegen-units = 1

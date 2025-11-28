@@ -31,3 +31,9 @@ src/vendor/
 ~*
 \#*\#
 
+
+
+# Added by cargo
+
+/target
+/pkg

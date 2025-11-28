@@ -2,39 +2,29 @@ import type { PDFiumDocument, PDFiumPageRenderOptions } from "@hyzyla/pdfium";
 import { PDFiumLibrary } from "@hyzyla/pdfium";
 import module from "@hyzyla/pdfium/pdfium.wasm?url";
 import { expose } from "comlink";
-import Vips from "wasm-vips";
 import type { setDocImagesWrapper } from "./App.tsx";
 import type { Setter } from "solid-js";
+import init, { bitmap_to_png } from "../pkg/bitmap_to_png.js";
 
-const pdfium = await PDFiumLibrary.init({
-  wasmUrl: module,
+const [pdfium, _] = await Promise.all([
+  PDFiumLibrary.init({
+    wasmUrl: module,
+  }),
+  init(),
+]);
+
+postMessage({
+  type: "worker-ready",
 });
 
-// 我不理解为啥这玩意吃这么多内存……
-const vips = await Vips({
-  // Optimize startup time by disabling the dynamic modules
-  // Also fix vite build. jxl wasm is not imported correctly.
-  dynamicLibraries: [],
-
-  onRuntimeInitialized() {
-    console.log("Vips runtime initialized");
-    postMessage({
-      type: "vips-ready",
-    });
-  },
-});
-
-async function renderFunction(
-  options: PDFiumPageRenderOptions,
-): Promise<Uint8Array> {
+async function renderFunction(options: PDFiumPageRenderOptions): Promise<Uint8Array> {
   const { data, height, width } = options;
 
-  using pngBuffer = vips.Image.newFromMemory(data, width, height, 4, 0);
-  const png = pngBuffer.pngsaveBuffer();
+  const png = bitmap_to_png(data, width, height);
   return png;
 }
 
-console.log("Vips version", vips.version());
+// console.log("Vips version", vips.version());
 
 let doc: PDFiumDocument | undefined = undefined;
 

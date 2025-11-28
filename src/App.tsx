@@ -43,7 +43,7 @@ export function setDocImagesWrapper(index: number, url: string) {
 }
 
 _worker.addEventListener("message", (event) => {
-  if (event.data.type === "vips-ready") {
+  if (event.data.type === "worker-ready") {
     setIsReady(true);
   }
 });
