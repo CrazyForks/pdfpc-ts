@@ -40,11 +40,7 @@ This project is good enough for my own use; I don't want to create a second Powe
 * Does not support text selection, hyperlinks, etc., because I only render bitmaps
 * Does not support the 'b' key for blacking out the screen
 * Does not support videos
-* Only supports very modern browsers. For example, I use the `using` keyword, which requires Chrome >= 134, Firefox >= 141. Safari is dead. Praying I can use my own computer for the next presentation...
-
-## Known Issues
-
-* wasm-vips consumes too much memory
+* Only supports very modern browsers.
 
 ## Demo
 
