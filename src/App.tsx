@@ -7,6 +7,10 @@ import { DropZone } from "./DropZone.tsx";
 import _styles from "./main.css?inline";
 import type { obj } from "./pdfium-worker.ts";
 
+const mainStyles = new window.CSSStyleSheet();
+mainStyles.replaceSync(_styles);
+window.document.adoptedStyleSheets.push(mainStyles);
+
 const _worker = new Worker(new URL("./pdfium-worker.ts", import.meta.url), {
   type: "module",
   name: "pdfium-worker",
