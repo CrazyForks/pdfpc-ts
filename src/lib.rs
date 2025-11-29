@@ -1,10 +1,4 @@
-#[cfg(feature = "image")]
-use image::ImageFormat;
-#[cfg(feature = "image")]
-use std::io::Cursor;
 use wasm_bindgen::prelude::*;
-#[cfg(all(not(feature = "image"), feature = "zune-png"))]
-use zune_png::zune_core;
 
 // static mut BUF: Vec<u8> = Vec::new();
 // static mut BUF: UnsafeCell<Vec<u8>> = UnsafeCell::new(Vec::new()); // 10 MB
@@ -42,6 +36,9 @@ use zune_png::zune_core;
 #[cfg(feature = "image")]
 #[wasm_bindgen]
 pub fn bitmap_to_png(rgba_data: &[u8], width: u32, height: u32) -> Result<Vec<u8>, JsValue> {
+    use image::ImageFormat;
+    use std::io::Cursor;
+
     // 验证数据长度
     let expected_len = (width * height * 4) as usize;
     if rgba_data.len() != expected_len {
@@ -67,9 +64,11 @@ pub fn bitmap_to_png(rgba_data: &[u8], width: u32, height: u32) -> Result<Vec<u8
     Ok(png_data)
 }
 
-#[cfg(all(not(feature = "image"), feature = "zune-png"))]
+#[cfg(feature = "zune-png")]
 #[wasm_bindgen]
 pub fn bitmap_to_png(rgba_data: &[u8], width: u32, height: u32) -> Result<Vec<u8>, JsValue> {
+    use zune_png::zune_core;
+
     let expected_len = (width * height * 4) as usize;
     if rgba_data.len() != expected_len {
         return Err(JsValue::from_str(&format!(
@@ -92,4 +91,26 @@ pub fn bitmap_to_png(rgba_data: &[u8], width: u32, height: u32) -> Result<Vec<u8
         .encode(&mut png_data)
         .map_err(|e| JsValue::from_str(&format!("Failed to encode PNG: {:?}", e)))?;
     Ok(png_data)
+}
+
+// Too slow even on lowest opt level, don't use
+#[cfg(feature = "oxipng")]
+#[wasm_bindgen]
+pub fn bitmap_to_png(rgba_data: &[u8], width: u32, height: u32) -> Result<Vec<u8>, JsValue> {
+    use oxipng::{Options, RawImage};
+
+    let raw = RawImage::new(
+        width,
+        height,
+        oxipng::ColorType::RGBA,
+        oxipng::BitDepth::Eight,
+        rgba_data.to_vec(),
+    )
+    .map_err(|e| JsValue::from_str(&format!("Failed to create RawImage: {:?}", e)))?;
+
+    // let option = Options::from_preset(1); // lowest opt level
+    let option = Options::from_preset(6); // highest opt level
+
+    raw.create_optimized_png(&option)
+        .map_err(|e| JsValue::from_str(&format!("Failed to encode PNG: {:?}", e)))
 }
