@@ -124,15 +124,19 @@ const handleFileSelect =
   };
 
 const nextPage = () => {
-  if (filePageCount() <= 0) return;
-  setGlobalCount((prev) => Math.min(prev + 1, filePageCount() - 1));
-  console.log("Current page:", globalCount());
+  document.startViewTransition(() => {
+    if (filePageCount() <= 0) return;
+    setGlobalCount((prev) => Math.min(prev + 1, filePageCount() - 1));
+    console.log("Current page:", globalCount());
+  });
 };
 
 const previousPage = () => {
-  if (filePageCount() <= 0) return;
-  setGlobalCount((prev) => Math.max(0, prev - 1));
-  console.log("Current page:", globalCount());
+  document.startViewTransition(() => {
+    if (filePageCount() <= 0) return;
+    setGlobalCount((prev) => Math.max(0, prev - 1));
+    console.log("Current page:", globalCount());
+  });
 };
 
 function popup() {
@@ -210,7 +214,12 @@ function App() {
                     <Show when={docImages()[index()]}>
                       <img
                         src={docImages()[index()]}
-                        class="h-full object-cover object-left"
+                        class={cx(
+                          "h-full object-cover object-left",
+                          `
+                            [view-transition-name:left-${index()}]
+                          `,
+                        )}
                       />
                     </Show>
                   </div>
@@ -228,7 +237,7 @@ function App() {
                 <Show when={docImages()[globalCount()]}>
                   <img
                     src={docImages()[globalCount()]}
-                    alt="current slide"
+                    alt="current slide note"
                     class="aspect-video h-full object-cover object-right"
                   />
                 </Show>
@@ -244,7 +253,13 @@ function App() {
                   <img
                     src={docImages()[globalCount()]}
                     alt="current slide"
-                    class="aspect-video h-full object-cover object-left"
+                    id="presenter-current-left"
+                    class={cx(
+                      "aspect-video h-full object-cover object-left",
+                      `
+                        [view-transition-name:left-${globalCount()}]
+                      `,
+                    )}
                   />
                 </Show>
               </div>
@@ -253,10 +268,15 @@ function App() {
                   <img
                     src={docImages()[globalCount() + 1]}
                     alt="next slide"
-                    class={`
-                      aspect-video h-full cursor-pointer object-cover
-                      object-left opacity-50
-                    `}
+                    class={cx(
+                      `
+                        aspect-video h-full cursor-pointer object-cover
+                        object-left opacity-50
+                      `,
+                      `
+                        [view-transition-name:left-${globalCount() + 1}]
+                      `,
+                    )}
                     onclick={nextPage}
                   />
                 </Show>
@@ -270,6 +290,7 @@ function App() {
           class={`
             pointer-events-none fixed bottom-4 left-4 flex justify-between gap-6
             p-4
+            [view-transition-name:anything]
           `}
         >
           <CircleButton
@@ -287,12 +308,16 @@ function App() {
               pointer-events-auto relative flex h-8 w-20 cursor-pointer
               place-content-between place-items-center rounded-full
               bg-cat-surface0/50 text-cat-subtext0/50 outline
-              outline-cat-subtext0/50 backdrop-blur-md transition-all
+              outline-cat-subtext0/50 transition-all
               hover:bg-cat-surface0/80 hover:outline-cat-subtext0
               dark:bg-cat-surface0/70
             `}
             onclick={() => {
-              setViewMode((prev) => (prev === OVERVIEW ? PRESENTER : OVERVIEW));
+              document.startViewTransition(() => {
+                setViewMode((prev) =>
+                  prev === OVERVIEW ? PRESENTER : OVERVIEW,
+                );
+              });
             }}
           >
             <div
@@ -305,10 +330,12 @@ function App() {
                   `,
               )}
             >
-              <button class={`
-                pointer-events-none icon-[fluent--grid-24-filled] aspect-square
-                h-full
-              `} />
+              <button
+                class={`
+                  pointer-events-none icon-[fluent--grid-24-filled]
+                  aspect-square h-full
+                `}
+              />
             </div>
             <div
               class={cx(
@@ -320,11 +347,13 @@ function App() {
                   `,
               )}
             >
-              <button class={`
-                pointer-events-none
-                icon-[fluent--content-view-gallery-24-filled] aspect-square
-                h-full
-              `} />
+              <button
+                class={`
+                  pointer-events-none
+                  icon-[fluent--content-view-gallery-24-filled] aspect-square
+                  h-full
+                `}
+              />
             </div>
             <div
               class={cx(
@@ -413,7 +442,7 @@ function CircleButton(props: {
       class={cx(
         `
           pointer-events-auto grid h-8 w-8 cursor-pointer place-items-center
-          rounded-full outline backdrop-blur-md transition-all
+          rounded-full outline transition-all
         `,
         props.toggled
           ? `
@@ -462,7 +491,7 @@ function SelectFile() {
               href="/?file=example.pdf"
               onclick={(e) => {
                 // If holding Ctrl or Cmd, open in new tab
-                if (e.ctrlKey || e.metaKey) {
+                if (e.ctrlKey || e.metaKey || e.button === 1) {
                   return;
                 }
                 e.preventDefault();

@@ -25,3 +25,13 @@
 
   @apply font-serif;
 }
+
+@source inline("[view-transition-name:left-{0..99}]");
+
+::view-transition-group(anything) {
+  @apply z-20;
+}
+
+/* ::view-transition-group(*) {
+  outline: 2px solid red;
+} */
