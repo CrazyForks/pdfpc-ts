@@ -19,6 +19,109 @@ const _worker = new Worker(new URL("./pdfium-worker.ts", import.meta.url), {
   name: "pdfium-worker",
 });
 
+const viewClasses = [
+  "[view-transition-name:left-0]",
+  "[view-transition-name:left-1]",
+  "[view-transition-name:left-2]",
+  "[view-transition-name:left-3]",
+  "[view-transition-name:left-4]",
+  "[view-transition-name:left-5]",
+  "[view-transition-name:left-6]",
+  "[view-transition-name:left-7]",
+  "[view-transition-name:left-8]",
+  "[view-transition-name:left-9]",
+  "[view-transition-name:left-10]",
+  "[view-transition-name:left-11]",
+  "[view-transition-name:left-12]",
+  "[view-transition-name:left-13]",
+  "[view-transition-name:left-14]",
+  "[view-transition-name:left-15]",
+  "[view-transition-name:left-16]",
+  "[view-transition-name:left-17]",
+  "[view-transition-name:left-18]",
+  "[view-transition-name:left-19]",
+  "[view-transition-name:left-20]",
+  "[view-transition-name:left-21]",
+  "[view-transition-name:left-22]",
+  "[view-transition-name:left-23]",
+  "[view-transition-name:left-24]",
+  "[view-transition-name:left-25]",
+  "[view-transition-name:left-26]",
+  "[view-transition-name:left-27]",
+  "[view-transition-name:left-28]",
+  "[view-transition-name:left-29]",
+  "[view-transition-name:left-30]",
+  "[view-transition-name:left-31]",
+  "[view-transition-name:left-32]",
+  "[view-transition-name:left-33]",
+  "[view-transition-name:left-34]",
+  "[view-transition-name:left-35]",
+  "[view-transition-name:left-36]",
+  "[view-transition-name:left-37]",
+  "[view-transition-name:left-38]",
+  "[view-transition-name:left-39]",
+  "[view-transition-name:left-40]",
+  "[view-transition-name:left-41]",
+  "[view-transition-name:left-42]",
+  "[view-transition-name:left-43]",
+  "[view-transition-name:left-44]",
+  "[view-transition-name:left-45]",
+  "[view-transition-name:left-46]",
+  "[view-transition-name:left-47]",
+  "[view-transition-name:left-48]",
+  "[view-transition-name:left-49]",
+  "[view-transition-name:left-50]",
+  "[view-transition-name:left-51]",
+  "[view-transition-name:left-52]",
+  "[view-transition-name:left-53]",
+  "[view-transition-name:left-54]",
+  "[view-transition-name:left-55]",
+  "[view-transition-name:left-56]",
+  "[view-transition-name:left-57]",
+  "[view-transition-name:left-58]",
+  "[view-transition-name:left-59]",
+  "[view-transition-name:left-60]",
+  "[view-transition-name:left-61]",
+  "[view-transition-name:left-62]",
+  "[view-transition-name:left-63]",
+  "[view-transition-name:left-64]",
+  "[view-transition-name:left-65]",
+  "[view-transition-name:left-66]",
+  "[view-transition-name:left-67]",
+  "[view-transition-name:left-68]",
+  "[view-transition-name:left-69]",
+  "[view-transition-name:left-70]",
+  "[view-transition-name:left-71]",
+  "[view-transition-name:left-72]",
+  "[view-transition-name:left-73]",
+  "[view-transition-name:left-74]",
+  "[view-transition-name:left-75]",
+  "[view-transition-name:left-76]",
+  "[view-transition-name:left-77]",
+  "[view-transition-name:left-78]",
+  "[view-transition-name:left-79]",
+  "[view-transition-name:left-80]",
+  "[view-transition-name:left-81]",
+  "[view-transition-name:left-82]",
+  "[view-transition-name:left-83]",
+  "[view-transition-name:left-84]",
+  "[view-transition-name:left-85]",
+  "[view-transition-name:left-86]",
+  "[view-transition-name:left-87]",
+  "[view-transition-name:left-88]",
+  "[view-transition-name:left-89]",
+  "[view-transition-name:left-90]",
+  "[view-transition-name:left-91]",
+  "[view-transition-name:left-92]",
+  "[view-transition-name:left-93]",
+  "[view-transition-name:left-94]",
+  "[view-transition-name:left-95]",
+  "[view-transition-name:left-96]",
+  "[view-transition-name:left-97]",
+  "[view-transition-name:left-98]",
+  "[view-transition-name:left-99]",
+];
+
 const worker = wrap<typeof obj>(_worker);
 
 // import styles from "./side.css" with { type: "css" };
@@ -216,9 +319,7 @@ function App() {
                         src={docImages()[index()]}
                         class={cx(
                           "h-full object-cover object-left",
-                          `
-                            [view-transition-name:left-${index()}]
-                          `,
+                          viewClasses[index()],
                         )}
                       />
                     </Show>
@@ -256,9 +357,7 @@ function App() {
                     id="presenter-current-left"
                     class={cx(
                       "aspect-video h-full object-cover object-left",
-                      `
-                        [view-transition-name:left-${globalCount()}]
-                      `,
+                      viewClasses[globalCount()],
                     )}
                   />
                 </Show>
@@ -273,9 +372,7 @@ function App() {
                         aspect-video h-full cursor-pointer object-cover
                         object-left opacity-50
                       `,
-                      `
-                        [view-transition-name:left-${globalCount() + 1}]
-                      `,
+                      viewClasses[globalCount() + 1],
                     )}
                     onclick={nextPage}
                   />
