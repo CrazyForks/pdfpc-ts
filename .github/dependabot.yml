@@ -4,12 +4,12 @@ updates:
     directory: "/"
     schedule:
       interval: cron
-      cronjob: "0 8 1 */3 *"
+      cronjob: "0 20 * * 0"
       timezone: Etc/UTC
   - package-ecosystem: npm
     directories:
       - "/"
-      - "/compute-js/"
+      # - "/compute-js/"
     groups:
       minor:
         update-types:
@@ -22,7 +22,7 @@ updates:
       - dependency-type: all
     schedule:
       interval: cron
-      cronjob: "0 8 1 */3 *"
+      cronjob: "0 20 * * 0"
       timezone: Etc/UTC
     open-pull-requests-limit: 10
   - package-ecosystem: cargo
