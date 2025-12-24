@@ -8,6 +8,7 @@ const isBuild =
   process.argv[1]?.includes("vite") && process.argv[2]?.includes("build");
 
 export default defineConfig({
+  base: "./",
   plugins: [
     !isBuild &&
       devtools({
