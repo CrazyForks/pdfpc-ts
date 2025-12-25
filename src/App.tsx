@@ -129,6 +129,36 @@ const worker = wrap<typeof obj>(_worker);
 // 乐，React 搞不了多根的状态同步吧
 const [globalCount, setGlobalCount] = createSignal(0);
 
+let intervalId: number | null = null;
+const [timer, setTimer] = createSignal<number>(0);
+
+const resetTimer = () => {
+  if (intervalId !== null) {
+    clearInterval(intervalId);
+  }
+  setTimer(0);
+  intervalId = null;
+};
+
+const startTimer = () => {
+  const startTimestamp = Date.now();
+  if (intervalId !== null) {
+    return;
+  }
+  intervalId = window.setInterval(() => {
+    const elapsed = Math.floor((Date.now() - startTimestamp) / 1000);
+    setTimer(elapsed);
+  }, 1000);
+};
+
+const secondsToMMSS = (seconds: number): string => {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins.toString().padStart(2, "0")}:${secs
+    .toString()
+    .padStart(2, "0")}`;
+};
+
 const [filePageCount, setFilePageCount] = createSignal(-1);
 
 // let doc: PDFiumDocument | undefined = undefined;
@@ -183,8 +213,8 @@ const handler = (e: KeyboardEvent) => {
 function PopupRoot() {
   onMount(() => {
     w()?.window.addEventListener("keydown", handler);
-    onCleanup(() => w()?.window.removeEventListener("keydown", handler));
   });
+  onCleanup(() => w()?.window.removeEventListener("keydown", handler));
   return (
     <div class="aspect-video">
       <div
@@ -254,7 +284,9 @@ function popup() {
   w()?.document.adoptedStyleSheets?.push(styles);
   w()?.addEventListener("beforeunload", () => {
     setW(null);
+    resetTimer();
   });
+  startTimer();
   render(() => <PopupRoot />, w()!.document!.querySelector("body")!);
 }
 
@@ -334,13 +366,19 @@ function App() {
           {/* Right Bottom: Next page */}
           <div class="grid h-full grid-cols-21 gap-4">
             <div class="col-span-13 flex items-center justify-center">
-              <div class="aspect-video overflow-hidden">
+              <div class="aspect-video relative">
                 <Show when={docImages()[globalCount()]}>
                   <img
                     src={docImages()[globalCount()]}
                     alt="current slide note"
                     class="aspect-video h-full object-cover object-right"
                   />
+                  <div class="absolute -top-8 font-mono">
+                    {secondsToMMSS(timer())}
+                  </div>
+                  <div class="absolute -top-8 right-0 font-mono">
+                    {globalCount() + 1}/{filePageCount()}
+                  </div>
                 </Show>
               </div>
             </div>
