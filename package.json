@@ -21,7 +21,6 @@
     "@types/node": "^25.3.0",
     "classix": "^2.2.6",
     "comlink": "^4.4.2",
-    "eslint-plugin-better-tailwindcss": "^4.3.0",
     "oxfmt": "^0.34.0",
     "oxlint": "^1.49.0",
     "oxlint-tsgolint": "^0.14.2",

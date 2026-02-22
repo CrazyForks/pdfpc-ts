@@ -52,10 +52,7 @@ export function DropZone(props: DropZoneProps) {
   return (
     <div
       class={cx(
-        `
-          relative grid aspect-video cursor-pointer place-items-center text-2xl
-          outline outline-cat-subtext0 outline-dashed
-        `,
+        "relative grid aspect-video cursor-pointer place-items-center text-2xl outline outline-cat-subtext0 outline-dashed",
         isDragging() && "bg-cat-surface0 outline-2",
       )}
       onDragOver={handleDragOver}
@@ -74,10 +71,7 @@ export function DropZone(props: DropZoneProps) {
           </>
         )}
       </div>
-      <span class={`
-        absolute right-2 bottom-2 icon-[fluent--document-add-20-filled] text-8xl
-        opacity-15
-      `} />
+      <span class="absolute right-2 bottom-2 icon-[fluent--document-add-20-filled] text-8xl opacity-15" />
     </div>
   );
 }

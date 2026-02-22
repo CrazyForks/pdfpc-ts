@@ -4,7 +4,5 @@ name = "pdfpc"
 compatibility_date = "2025-12-21"
 assets = { directory = "./dist" }
 workers_dev = false
-routes = [
-  { pattern = "pdfpc.hash.moe", custom_domain = true },
-]
+routes = [{ pattern = "pdfpc.hash.moe", custom_domain = true }]
 send_metrics = false

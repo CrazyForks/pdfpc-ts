@@ -9,7 +9,7 @@ crate-type = ["cdylib"]
 [dependencies]
 image = { version = "0.25.9", default-features = false, features = [
   "bmp",
-  "png"
+  "png",
 ], optional = true }
 oxipng = { version = "10.1.0", default-features = false, features = [
   "freestanding",
@@ -20,7 +20,7 @@ png = { version = "0.18.1", default-features = false, features = [
 wasm-bindgen = "0.2.111"
 zune-png = { version = "0.5.1", default-features = false, features = [
   # "portable-simd",
-  "std"
+  "std",
 ], optional = true }
 
 [features]
