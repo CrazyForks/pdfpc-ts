@@ -60,7 +60,7 @@ jobs:
           cache: "pnpm"
 
       - name: Install dependencies
-        run: pnpm install && pnpm --prefix ./compute-js install
+        run: pnpm install
 
       - run: |
           cargo +nightly build --release --target wasm32-unknown-unknown --no-default-features -F png -Z build-std=panic_abort,std

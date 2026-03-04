@@ -1,0 +1,40 @@
+name: Oxlint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  oxlint:
+    runs-on: ubuntu-slim
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 10
+          run_install: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: "pnpm"
+          check-latest: true
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - uses: CatChen/oxlint-suggestion-action@v1
+        with:
+          # request-changes: true # optional
+          # fail-check: false # optional
+          github-token: ${{ secrets.GITHUB_TOKEN }} # optional
+          # directory: "./" # optional
+          targets: "src" # optional
+          # oxlint-bin-path: "./node_modules/.bin/oxlint" # optional
+          # config-path: "" # optional
