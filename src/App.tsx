@@ -1,7 +1,7 @@
 import { render } from "@solidjs/web";
 import { cx } from "classix";
 import { proxy, transfer, wrap } from "comlink";
-import { createSignal, flush, For, onCleanup, onSettled, Show } from "solid-js";
+import { createSignal, For, onCleanup, onSettled, Show } from "solid-js";
 import type { JSX } from "solid-js/jsx-runtime";
 
 import { DropZone } from "./DropZone.tsx";
@@ -239,9 +239,9 @@ const handleFileSelect =
 
     try {
       await worker.loadPDF(transfer(u, [u.buffer]));
-      setFilePageCount(await worker.pageCount());
-      flush();
-      for (let i = 0; i < filePageCount(); i++) {
+      const c = await worker.pageCount();
+      setFilePageCount(c);
+      for (let i = 0; i < c; i++) {
         await worker.renderPDF(i, proxy(setDocImagesWrapper));
       }
       console.log(docImages());
@@ -270,20 +270,19 @@ const previousPage = () => {
 function popup() {
   const _w = window.open("", "", "left=100,top=100,width=320,height=180");
   setW(_w);
-  flush();
-  console.log(w());
+  console.log(_w);
 
   // todo: when does vite support css import attributes?
   // @ts-expect-error 误报
-  const styles = new (w().CSSStyleSheet)();
+  const styles = new _w.CSSStyleSheet();
   styles.replaceSync(_styles);
-  w()?.document.adoptedStyleSheets?.push(styles);
-  w()?.addEventListener("beforeunload", () => {
+  _w?.document.adoptedStyleSheets?.push(styles);
+  _w?.addEventListener("beforeunload", () => {
     setW(null);
     resetTimer();
   });
   startTimer();
-  render(() => <PopupRoot />, w()!.document!.querySelector("body")!);
+  render(() => <PopupRoot />, _w!.document!.querySelector("body")!);
 }
 
 function closePopup() {
