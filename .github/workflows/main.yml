@@ -5,6 +5,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 env:
   CARGO_TERM_COLOR: always
@@ -72,11 +75,13 @@ jobs:
           name: dist
           path: dist/
           compression-level: 9
+      - uses: preactjs/compressed-size-action@v3
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
       - run: |
           pnpm run fastly:deploy
@@ -84,3 +89,4 @@ jobs:
         working-directory: compute-js
         env:
           FASTLY_API_TOKEN: ${{ secrets.FASTLY_API_TOKEN }}
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
