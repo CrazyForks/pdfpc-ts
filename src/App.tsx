@@ -460,7 +460,7 @@ function App() {
             </div>
             <div
               class={cx(
-                "absolute z-10 aspect-square h-full rounded-full border-4 border-transparent bg-cat-subtext0/50 bg-clip-padding text-cat-surface0/70 transition-all ease-in hover:bg-cat-subtext0/80",
+                "absolute z-10 aspect-square h-full w-8 rounded-full border-4 border-transparent bg-cat-subtext0/50 bg-clip-padding text-cat-surface0/70 transition-all ease-in hover:bg-cat-subtext0/80",
                 viewMode() === OVERVIEW ? "left-0" : "left-0 translate-x-12",
               )}
             />
