@@ -23,13 +23,13 @@ function isSafari(): boolean {
   return /^((?!chrome|android).)*safari/i.test(ua);
 }
 
-const startViewTransition = (fn) => {
-  if (isSafari()) {
+if (isSafari()) {
+  // @ts-ignore
+  document.startViewTransition = (fn) => {
+    // @ts-ignore
     fn();
-  } else {
-    document.startViewTransition(fn);
-  }
-};
+  };
+}
 
 const viewClasses = [
   "[view-transition-name:left-0]",
@@ -265,7 +265,7 @@ const handleFileSelect =
   };
 
 const nextPage = () => {
-  startViewTransition(() => {
+  document.startViewTransition(() => {
     if (filePageCount() <= 0) return;
     setGlobalCount((prev) => Math.min(prev + 1, filePageCount() - 1));
     console.log("Current page:", globalCount());
@@ -273,7 +273,7 @@ const nextPage = () => {
 };
 
 const previousPage = () => {
-  startViewTransition(() => {
+  document.startViewTransition(() => {
     if (filePageCount() <= 0) return;
     setGlobalCount((prev) => Math.max(0, prev - 1));
     console.log("Current page:", globalCount());
@@ -433,7 +433,7 @@ function App() {
           <div
             class="pointer-events-auto relative flex h-8 w-20 cursor-pointer place-content-between place-items-center rounded-full bg-cat-surface0/50 text-cat-subtext0/50 outline outline-cat-subtext0/50 transition-all hover:bg-cat-surface0/80 hover:outline-cat-subtext0 dark:bg-cat-surface0/70"
             onClick={() => {
-              startViewTransition(() => {
+              document.startViewTransition(() => {
                 setViewMode((prev) =>
                   prev === OVERVIEW ? PRESENTER : OVERVIEW,
                 );
