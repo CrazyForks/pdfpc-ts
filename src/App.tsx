@@ -557,7 +557,7 @@ function SelectFile() {
   return (
     <>
       <h1 class="text-4xl font-extrabold">PDF Presenter View</h1>
-      <div class="mt-30 grid h-80 w-full grid-cols-2 gap-16 px-10 lg:px-20">
+      <div class="mt-30 grid w-full grid-cols-2 gap-16 px-10 lg:px-20">
         <DropZone type="no-notes" onFileSelect={handleFileSelect("no-notes")} />
         <DropZone
           type="notes-right"
