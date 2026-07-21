@@ -1,8 +1,8 @@
 import { render } from "@solidjs/web";
+import type { JSX } from "@solidjs/web";
 import { cx } from "classix";
 import { proxy, transfer, wrap } from "comlink";
 import { createSignal, For, onSettled, Show } from "solid-js";
-import type { JSX } from "solid-js/jsx-runtime";
 
 import { DropZone } from "./DropZone.tsx";
 import type { obj } from "./pdfium-worker.ts";
